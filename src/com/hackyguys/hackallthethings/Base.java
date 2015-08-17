@@ -1,31 +1,19 @@
 package com.hackyguys.hackallthethings;
 
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import org.keplerproject.luajava.LuaState;
-import org.keplerproject.luajava.LuaStateFactory;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
+import com.hackyguys.hackallthethings.commands.Command;
 import com.hackyguys.hackallthethings.commands.Commands;
 import com.hackyguys.hackallthethings.filesystem.BasicFile;
 import com.hackyguys.hackallthethings.filesystem.Directory;
@@ -98,19 +86,15 @@ public class Base extends Application{
 	
 	public void enterCommand(String s, TextField tf){
 		String primaryCommand = s.split(" ")[0];
-		Method m = Commands.map.get(primaryCommand);
+		Command c = Commands.standardCommandMap.get(primaryCommand);
 		tf.clear();
 		System.out.println("> " + s);
-		if(m != null){
-			try{
-				m.invoke(null, (Object) s.substring(s.indexOf(' ') + 1));
-			}catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e){
-				e.printStackTrace();
-			}
+		if(c != null){
+			c.call(s.substring(s.indexOf(' ') + 1));
 		}else if(currentDir.contains(primaryCommand) && primaryCommand.endsWith(".lua")){
-			LuaState L = LuaStateFactory.newLuaState();
-			L.openLibs();
-			L.LdoString("" + ((BasicFile) currentDir.getFile(primaryCommand)).getContents());
+			Globals globals = JsePlatform.standardGlobals();
+			LuaValue chunk = globals.load("" + ((BasicFile) currentDir.getFile(primaryCommand)).getContents());
+			chunk.call();
 		}else{
 			System.out.println("Invalid Command!");
 		}
