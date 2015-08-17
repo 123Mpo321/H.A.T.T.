@@ -1,11 +1,17 @@
 package com.hackyguys.hackallthethings.filesystem;
 
-public class File{
+
+public abstract class File{
 	
-	protected boolean isHidden = false;
-	protected String name;
-	protected String path;
-	protected Directory parent;
+	boolean isHidden = false;
+	String name;
+	FileTypes type;
+	String path;
+	Directory parent;
+	
+	public File(String name){
+		this(name, null);
+	}
 	
 	public File(String name, Directory parent){
 		this.name = name;
@@ -30,7 +36,7 @@ public class File{
 		return parent;
 	}
 	
-	public void setParent(Directory parent){
+	protected void setParent(Directory parent){
 		this.parent = parent;
 	}
 	
@@ -48,6 +54,10 @@ public class File{
 	
 	public void setIsHidden(boolean isHidden){
 		this.isHidden = isHidden;
+	}
+	
+	public FileTypes getType(){
+		return type;
 	}
 	
 }

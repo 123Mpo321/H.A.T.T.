@@ -1,9 +1,9 @@
 package com.hackyguys.hackallthethings.filesystem;
 
-public class BasicFile extends File{
+public abstract class BasicFile extends File{
 	
-	protected String contents;
-	protected String extention;
+	String contents;
+	String extention;
 	
 	public BasicFile(String name, Directory parent){
 		super(name, parent);
