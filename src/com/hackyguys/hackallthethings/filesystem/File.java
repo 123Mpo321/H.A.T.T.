@@ -1,43 +1,29 @@
 package com.hackyguys.hackallthethings.filesystem;
 
+import java.util.Calendar;
 
-public abstract class File{
+
+public class File extends FSNode{
 	
 	boolean isHidden = false;
+	String content = "";
 	String name;
-	FileTypes type;
 	String path;
 	Directory parent;
 	
 	public File(String name){
-		this(name, null);
-	}
-	
-	public File(String name, Directory parent){
 		this.name = name;
-		this.parent = parent;
-		Directory d = parent;
 		this.path = "";
-		while(d != null && d.parent != null){
-			this.path = d.getName() + "/" + this.path;
-			d = d.parent;
-		}
 	}
 	
+	@Override
 	public String getName(){
 		return name;
 	}
 	
+	@Override
 	public void setName(String name){
 		this.name = name;
-	}
-	
-	public Directory getParent(){
-		return parent;
-	}
-	
-	protected void setParent(Directory parent){
-		this.parent = parent;
 	}
 	
 	protected String getLocation(){
@@ -56,8 +42,14 @@ public abstract class File{
 		this.isHidden = isHidden;
 	}
 	
-	public FileTypes getType(){
-		return type;
+	@Override
+	public String getPath(){
+		return path;
+	}
+	
+	@Override
+	public Calendar getModifyTime(){
+		return modified;
 	}
 	
 }

@@ -2,18 +2,19 @@ package com.hackyguys.hackallthethings.terminal.os.user;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 
 public class User{
 	
 	private MessageDigest MD5;
 	private String username;
-	public final int ID;
+	public final UUID ID;
 	private String password;
 	
 	public User(String name, String password){
 		this.username = name;
-		ID = hashCode();
+		ID = UUID.randomUUID();
 		try{
 			MD5 = MessageDigest.getInstance("MD5");
 			this.password = new String(MD5.digest(password.getBytes()));
@@ -39,7 +40,7 @@ public class User{
 			this.password = new String(MD5.digest(password.getBytes()));
 	}
 
-	public int getID(){
+	public UUID getID(){
 		return ID;
 	}
 	

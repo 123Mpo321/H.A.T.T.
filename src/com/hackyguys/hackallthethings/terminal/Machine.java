@@ -12,4 +12,8 @@ public abstract class Machine{
 		OS = os;
 	}
 	
+	public void init(){
+		OS.init();
+	} 
+	
 }
